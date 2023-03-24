@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/ktm-verse-backend.props" />
-</Project>
