@@ -119,7 +119,6 @@ const updatedUser = asyncHandler(async (req, res) => {
     }
   });
 
-
 // get all users
 const getallUser = asyncHandler(async (req, res) => {
     try {
