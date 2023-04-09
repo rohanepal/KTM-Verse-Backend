@@ -437,7 +437,7 @@ const createOrder = asyncHandler(async (req, res) => {
         amount: finalAmout,
         status: "Cash on Delivery",
         created: Date.now(),
-        currency: "usd",
+        currency: "NRs",
       },
       orderby: user._id,
       orderStatus: "Cash on Delivery",
