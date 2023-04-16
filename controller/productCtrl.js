@@ -33,7 +33,19 @@ const updateProduct = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
+// update category
+const updateCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  try {
+    const updatedCategory = await Category.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    res.json(updatedCategory);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
 // Delete a Product
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -51,7 +63,7 @@ const getaProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const findProduct = await Product.findById(id);
+    const findProduct = await Product.findById(id).populate("color");
     res.json(findProduct);
   } catch (error) {
     throw new Error(error);
