@@ -382,7 +382,23 @@ const updateProductQuantityFromCart = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
+const createOrder = asyncHandler(async(req, res)=> {
+  const {shippingInfo,orderItems,totalPrice,totalPriceAfterDiscount,paymentInfo} = req.body;
+  const { _id } = req.user;
+  try {
+     const order = await Order.create({
+      shippingInfo,orderItems,totalPrice,totalPriceAfterDiscount,paymentInfo,user:_id
+     })
+     res.json({
+      order,
+      success:true
+     });
+  }catch (error) {
+    throw new Error(error)
+  } 
+})
+    
+/*
 // Clear Cart
 const emptyCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
@@ -530,6 +546,8 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 });
 
+*/
+
 
 module.exports = { 
   createUser,
@@ -550,13 +568,7 @@ module.exports = {
   saveAddress,
   userCart,
   getUserCart,
-  emptyCart,
-  applyCoupon,
-  createOrder,
-  getOrders,
-  updateOrderStatus,
-  getAllOrders,
-  getOrderByUserId,
   removeProductFromCart,
   updateProductQuantityFromCart,
+  createOrder,
  };
