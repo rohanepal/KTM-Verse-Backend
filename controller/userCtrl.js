@@ -390,10 +390,10 @@ const createOrder = asyncHandler(async(req, res)=> {
       shippingInfo,orderItems,totalPrice,totalPriceAfterDiscount,paymentInfo,user:_id
      })
      res.json({
-      order,
+      order, 
       success:true
      });
-  }catch (error) {
+  } catch (error) {
     throw new Error(error)
   } 
 })
