@@ -23,6 +23,7 @@ const {
     removeProductFromCart,
     updateProductQuantityFromCart,
     getMyOrders,
+    emptyCart,
 } = require("../controller/userCtrl");
 const { checkout, paymentVerification } = require("../controller/paymentCtrl");
 const router = express.Router();
@@ -52,7 +53,7 @@ router.get("/:id", authMiddleware, isAdmin, getaUser);
 router.delete("/delete-product-cart/:cartItemId", authMiddleware, removeProductFromCart);
 router.delete("/update-product-cart/:cartItemId/:newQuantiy", authMiddleware, updateProductQuantityFromCart);
 // router.delete("/empty-cart", authMiddleware, emptyCart);
-
+router.delete("/empty-cart", authMiddleware, emptyCart);
 router.delete("/:id", deleteaUser);
 /* router.put(
     "/order/update-order/:id",

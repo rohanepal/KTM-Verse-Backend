@@ -368,6 +368,18 @@ const removeProductFromCart = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+// emptyCart
+const emptyCart = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  validateMongoDbId(_id);
+  try {
+    const deleteCart = await Cart.deleteMany({userId:_id})
+    res.json(deleteCart);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 // update product quantity in Cart
 const updateProductQuantityFromCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
@@ -435,4 +447,5 @@ module.exports = {
   updateProductQuantityFromCart,
   createOrder,
   getMyOrders,
+  emptyCart,
  };
