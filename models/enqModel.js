@@ -23,6 +23,11 @@ var enqSchema = new mongoose.Schema({
     default: "Submitted",
     enum: ["Submitted", "Contacted", "In Progress", "Resolved"],
   },
+  paymentMethod: {
+    type: String,
+    enum: ["online", "cash"],
+    required: true,
+  },
 });
 
 //Export the model

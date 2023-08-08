@@ -41,11 +41,11 @@ var orderSchema = new mongoose.Schema(
     paymentInfo: {
       razorpayOrderId: {
         type: String,
-        required: false
+        required: true
       },
       razorpayPaymentId: {
         type: String,
-        required:false
+        required: true
       }
     },
     orderItems: [
@@ -85,8 +85,7 @@ var orderSchema = new mongoose.Schema(
     orderStatus: {
       type: String,
       default:"Ordered"
-    },
-
+    }
   }, 
   {
     timestamps: true,
