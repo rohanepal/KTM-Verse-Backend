@@ -24,6 +24,9 @@ const {
     updateProductQuantityFromCart,
     getMyOrders,
     emptyCart,
+    getMonthWiseOrderIncome,
+    getYerarlyTotalOrder,
+    getAllOrders,
 } = require("../controller/userCtrl");
 const { checkout, paymentVerification } = require("../controller/paymentCtrl");
 const router = express.Router();
@@ -41,8 +44,11 @@ router.post("/order/paymentVerification", authMiddleware, paymentVerification);
 router.post("/cart/create-order", authMiddleware, createOrder);
 router.get("/all-users", getallUser);
 router.get("/getmyorders", authMiddleware, getMyOrders);
-// router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
+router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
 // router.post("/getorderbyuser/:id", authMiddleware, isAdmin, getAllOrders);
+router.get("/getMonthWiseOrderIncome", authMiddleware, getMonthWiseOrderIncome)
+router.get("/getYearlyOrders", authMiddleware, getYerarlyTotalOrder)
+
 router.get("/refresh", handleRefreshToken);
 router.get("/logout", logout);
 router.get("/wishlist", authMiddleware, getWishlist);

@@ -46,7 +46,7 @@ var orderSchema = new mongoose.Schema(
       razorpayPaymentId: {
         type: String,
         required:false
-      }
+      },
     },
     orderItems: [
       {
@@ -74,6 +74,10 @@ var orderSchema = new mongoose.Schema(
       type: Date,
       default: Date.now()
     },
+    month: {
+      type: String,
+      default:new Date().getMonth()
+    },
     totalPrice: {
       type: Number,
       required:true
@@ -86,7 +90,9 @@ var orderSchema = new mongoose.Schema(
       type: String,
       default:"Ordered"
     },
-
+    paymentMethod:{
+      type: String
+    }
   }, 
   {
     timestamps: true,

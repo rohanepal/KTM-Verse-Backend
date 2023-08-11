@@ -395,21 +395,40 @@ const updateProductQuantityFromCart = asyncHandler(async (req, res) => {
   }
 });
 // create oder functionality
-const createOrder = asyncHandler(async(req, res)=> {
-  const {shippingInfo,orderItems,totalPrice,totalPriceAfterDiscount,paymentInfo} = req.body;
+const createOrder = asyncHandler(async (req, res) => {
+  const { shippingInfo, orderItems, totalPrice, totalPriceAfterDiscount, paymentInfo, paymentMethod } = req.body;
   const { _id } = req.user;
+
   try {
-     const order = await Order.create({
-      shippingInfo,orderItems,totalPrice,totalPriceAfterDiscount,paymentInfo,user:_id
-     })
-     res.json({
-      order, 
-      success:true
-     });
+    const order = await Order.create({
+      shippingInfo,
+      orderItems,
+      totalPrice,
+      totalPriceAfterDiscount,
+      paymentInfo,
+      paymentMethod,
+      user: _id
+    });
+
+    // Update product quantities
+    for (const item of orderItems) {
+      const product = await Product.findById(item.product);
+      if (product) {
+        product.quantity -= item.quantity;
+        product.sold += item.quantity;
+        await product.save();
+      }
+    }
+
+    res.json({
+      order,
+      success: true
+    });
   } catch (error) {
-    throw new Error(error)
-  } 
-})
+    throw new Error(error);
+  }
+});
+
 // get my order function
 const getMyOrders = asyncHandler(async (req, res) => {
   const { _id } = req.user;
@@ -423,6 +442,80 @@ const getMyOrders = asyncHandler(async (req, res) => {
   } 
 })
 
+// get all order function
+const getAllOrders = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  try {
+    const orders = await Order.find()
+    res.json({
+      orders
+    })
+      } catch (error) {
+    throw new Error(error)
+  } 
+})
+
+// yearly income
+
+const getYerarlyTotalOrder = asyncHandler(async (req, res) => {
+  let monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  let d = new Date();
+  let endDate = "";
+  d.setDate(1)
+  for (let index = 0; index < 11; index++) {
+    d.setMonth(d.getMonth() - 1)
+    endDate = monthNames[d.getMonth()] + " " + d.getFullYear()
+  }
+  const data = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $lte: new Date(),
+          $gte: new Date(endDate)
+        }
+      }
+    }, {
+      $group: {
+        _id:null,
+        count: {$sum: 1},
+        amount: {$sum: "$totalPriceAfterDiscount"}
+      }
+    }
+  ])
+  res.json(data)
+
+})
+
+// monthly income
+
+const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
+  let monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  let d = new Date();
+  let endDate = "";
+  d.setDate(1)
+  for (let index = 0; index < 11; index++) {
+    d.setMonth(d.getMonth() - 1)
+    endDate = monthNames[d.getMonth()] + " " + d.getFullYear()
+  }
+  const data = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $lte: new Date(),
+          $gte: new Date(endDate)
+        }
+      }
+    }, {
+      $group: {
+          _id:{
+          month:"$month"
+        },amount: {$sum: "$totalPriceAfterDiscount"},count: { $sum: 1 },
+      }
+    }  
+  ])
+  res.json(data)
+
+})
 
 module.exports = { 
   createUser,
@@ -448,4 +541,7 @@ module.exports = {
   createOrder,
   getMyOrders,
   emptyCart,
+  getMonthWiseOrderIncome,
+  getYerarlyTotalOrder,
+  getAllOrders,
  };
